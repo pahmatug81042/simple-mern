@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
-
-import TasksList from './components/TaskList';
+import TaskList from './components/TaskList';  // Use singular TaskList here
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
@@ -10,15 +9,29 @@ const App = () => {
   const getTasks = useCallback(() => {
     fetch('/api/tasks')
       .then(res => res.json())
-      .then(setTasks);
-  });
+      .then(data => {
+        console.log('Fetched tasks from API:', data); // Debug log
+        if (Array.isArray(data)) {
+          setTasks(data);
+        } else {
+          console.error('API did not return an array:', data);
+          setTasks([]);
+        }
+      })
+      .catch(err => {
+        console.error('Fetch error:', err);
+        setTasks([]);
+      });
+  }, []);
 
   useEffect(() => {
     getTasks();
-  }, []);
+  }, [getTasks]);
 
   const clickAddTask = event => {
     event.preventDefault();
+
+    if (!newTaskTitle.trim()) return; // prevent adding empty tasks
 
     fetch('/api/tasks/add', {
       method: 'post',
@@ -34,7 +47,7 @@ const App = () => {
     <div className="App">
       <h1>My Tasks</h1>
 
-      <TasksList tasks={tasks} updateTasks={getTasks} />
+      <TaskList tasks={tasks} updateTasks={getTasks} />
 
       <form onSubmit={clickAddTask}>
         <input
@@ -44,7 +57,12 @@ const App = () => {
           value={newTaskTitle}
           onChange={event => setNewTaskTitle(event.target.value)}
         />
-        <input className="btn-primary" type="submit" value="Add" />
+        <input
+          className="btn-primary"
+          type="submit"
+          value="Add"
+          disabled={!newTaskTitle.trim()}
+        />
       </form>
     </div>
   );

@@ -8,7 +8,8 @@ const TaskList = ({ tasks, updateTasks }) => {
       method: 'delete',
     })
       .then(res => res.json())
-      .then(() => updateTasks());
+      .then(() => updateTasks())
+      .catch(err => console.error('Delete task error:', err));
   };
 
   const toggleDone = task => {
@@ -16,7 +17,9 @@ const TaskList = ({ tasks, updateTasks }) => {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ done: !task.done }),
-    }).then(() => updateTasks());
+    })
+      .then(() => updateTasks())
+      .catch(err => console.error('Update task error:', err));
   };
 
   return (
