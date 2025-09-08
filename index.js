@@ -12,6 +12,10 @@ connectDB();
 
 app.use(express.json());
 
+app.use(cors({
+  origin: 'https://simple-mern-frontend-mucn.onrender.com'
+}));
+
 /* // Serve React frontend build
 app.use(express.static(path.join(__dirname, 'client/build'))); */
 
