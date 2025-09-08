@@ -1,25 +1,24 @@
 import React from 'react';
 
+const BASE_URL = process.env.REACT_APP_API_BASE;
+
 const TaskList = ({ tasks, updateTasks }) => {
   const clickDeleteTask = (event, task) => {
     event.preventDefault();
 
-    fetch(`/api/tasks/delete/${task._id}`, {
-      method: 'delete',
+    fetch(`${BASE_URL}/api/tasks/delete/${task._id}`, {
+      method: 'DELETE',
     })
       .then(res => res.json())
-      .then(() => updateTasks())
-      .catch(err => console.error('Delete task error:', err));
+      .then(() => updateTasks());
   };
 
   const toggleDone = task => {
-    fetch(`/api/tasks/update/${task._id}`, {
-      method: 'post',
+    fetch(`${BASE_URL}/api/tasks/update/${task._id}`, {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ done: !task.done }),
-    })
-      .then(() => updateTasks())
-      .catch(err => console.error('Update task error:', err));
+    }).then(() => updateTasks());
   };
 
   return (

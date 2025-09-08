@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
-import TaskList from './components/TaskList';  // Use singular TaskList here
+import TaskList from './components/TaskList';
+
+const BASE_URL = process.env.REACT_APP_API_BASE;
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
   const getTasks = useCallback(() => {
-    fetch('/api/tasks')
+    fetch(`${BASE_URL}/api/tasks`)
       .then(res => res.json())
       .then(data => {
-        console.log('Fetched tasks from API:', data); // Debug log
         if (Array.isArray(data)) {
           setTasks(data);
         } else {
@@ -31,10 +32,10 @@ const App = () => {
   const clickAddTask = event => {
     event.preventDefault();
 
-    if (!newTaskTitle.trim()) return; // prevent adding empty tasks
+    if (!newTaskTitle.trim()) return;
 
-    fetch('/api/tasks/add', {
-      method: 'post',
+    fetch(`${BASE_URL}/api/tasks/add`, {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title: newTaskTitle }),
     }).then(() => {
