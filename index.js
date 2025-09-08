@@ -20,6 +20,10 @@ app.use(cors({
 /* // Serve React frontend build
 app.use(express.static(path.join(__dirname, 'client/build'))); */
 
+app.get('/', (req, res) => {
+  res.send("Simple Mern Backend API Is Running...");
+});
+
 // API routes
 app.use('/api/tasks', routeTasks);
 
